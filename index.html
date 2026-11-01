@@ -117,15 +117,16 @@ nav ul a:hover{opacity:1;text-decoration:underline;text-decoration-color:var(--b
 @media (prefers-reduced-motion:reduce){.tl::before,.tl li:first-child::after{animation:none;transform:none}.tl::before{opacity:.5}}
 
 /* menu style training */
-.menu{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:44px clamp(22px,5vw,64px);position:relative;outline:1px solid var(--brass);outline-offset:-10px}
+.menu{width:100%;max-width:100%;min-width:0;box-sizing:border-box;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:44px clamp(22px,5vw,64px);position:relative;outline:1px solid var(--brass);outline-offset:-10px}
 .menu h2{text-align:center}
 .menu .sub{text-align:center;color:var(--muted);margin:0 0 30px;font-family:var(--serif);font-style:italic;font-size:1.25rem}
-.item{margin-bottom:26px}
+.item{position:relative;margin-bottom:26px;padding-left:18px}
+.item::before{content:"";position:absolute;left:0;top:.55em;width:7px;height:7px;border-radius:50%;background:var(--brass);box-shadow:0 0 0 3px rgba(214,173,92,.16)}
 .row{display:flex;align-items:baseline;gap:10px}
-.row h3{font-size:1.5rem}
+.row h3{min-width:0;font-size:1.5rem;overflow-wrap:anywhere}
 .row .dots{flex:1;border-bottom:2px dotted var(--line);transform:translateY(-5px);min-width:20px}
 .row .when{font-weight:600;color:var(--accent);white-space:nowrap}
-.item p{font-size:.88rem}
+.item p{padding-left:4px;font-size:.88rem;opacity:.7;overflow-wrap:anywhere}
 .chips{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
 .chips li{background:var(--soft);border-radius:999px;padding:5px 14px;font-size:.92rem}
 
@@ -163,6 +164,9 @@ nav ul a:hover{opacity:1;text-decoration:underline;text-decoration-color:var(--b
   section{height:100svh;min-height:100svh;justify-content:flex-start;padding:42px 0 24px}
   #education,#training,#skills,#references{padding:28px 0 24px}
   section + section{margin-top:32px}
+  #education + #training{margin-top:88px}
+  #training{padding-top:72px}
+  #training{height:auto;min-height:100svh}
   .about{gap:24px}
   section h2{font-size:2rem}
   .about p{font-size:1.05rem;line-height:1.4;margin-bottom:.8em}
