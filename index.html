@@ -37,7 +37,7 @@ section + section{margin-top:48px}
 nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;margin-bottom:-60px;background:transparent;color:var(--hero-ink);transition:background-color .3s ease,box-shadow .3s ease}
 nav.scrolled{background:var(--hero-a);box-shadow:0 6px 18px rgba(20,5,40,.2)}
 nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:60px;padding-left:5%;padding-right:5%}
-nav .logo{font-family:var(--serif);font-size:1.35rem;font-weight:600;text-decoration:none;white-space:nowrap}
+nav .logo{font-family:var(--serif);font-size:1.35rem;font-style:italic;font-weight:600;text-decoration:none;white-space:nowrap}
 nav ul{display:flex;gap:4px 20px;list-style:none;margin:0;padding:0;overflow-x:auto;scrollbar-width:none}
 nav ul::-webkit-scrollbar{display:none}
 nav ul a{text-decoration:none;font-size:.95rem;opacity:.85;padding:6px 2px;white-space:nowrap}
@@ -46,7 +46,10 @@ nav ul a:hover{opacity:1;text-decoration:underline;text-decoration-color:var(--b
 /* hero */
 .hero{min-height:100vh;min-height:100svh;display:flex;align-items:center;background:radial-gradient(900px 480px at 85% 10%,var(--hero-b),transparent 70%),var(--hero-a);color:var(--hero-ink);padding:64px 0 88px}
 .hero .wrap{display:grid;grid-template-columns:1.25fr .75fr;gap:48px;align-items:center}
-.hero h1{font-size:clamp(3rem,8vw,5.6rem);font-weight:600;letter-spacing:-.01em}
+.hero h1{font-size:clamp(2.35rem,7.5vw,5.6rem);font-weight:600;letter-spacing:-.01em}
+.hero-name{display:inline-block;max-width:100%;white-space:nowrap}
+.hero-name.typing-caret{border-right:3px solid var(--brass);padding-right:.08em;animation:typing-caret .8s step-end infinite}
+@keyframes typing-caret{50%{border-color:transparent}}
 .hero h1 em{display:block;font-weight:500;font-size:.5em;color:#e2cffb;margin-top:.15em}
 .hero p{max-width:46ch;color:#e6d9f8;font-size:1.15rem;margin:22px 0 30px}
 .btns{display:flex;flex-wrap:wrap;gap:12px}
@@ -151,11 +154,12 @@ nav ul a:hover{opacity:1;text-decoration:underline;text-decoration-color:var(--b
   nav .logo{display:none}
   nav ul{gap:4px 14px;width:100%;justify-content:space-between}
   nav ul a{font-size:.74rem;padding:5px 0}
-  .hero{height:100svh;min-height:100svh;padding:76px 0 56px}
+  .hero{height:100svh;min-height:100svh;padding:48px 0 80px}
   .hero .wrap,.about{grid-template-columns:1fr}
-  .hero .wrap{gap:32px}
+  .hero .wrap{gap:32px;transform:translateY(-16px)}
   .hero .wrap > div:first-child{margin-top:40px}
-  .hero h1{font-size:clamp(2.6rem,13vw,4.2rem)}
+  .hero h1{font-size:clamp(1.8rem,9.5vw,4.2rem)}
+  .hero-name.typing-caret{border-right-width:2px}
   .hero p{font-size:1rem;margin:16px 0 24px}
   .portrait{order:-1;width:min(220px,58vw)}
   .badge{bottom:-28px;padding:7px 14px}
@@ -233,7 +237,10 @@ nav ul a:hover{opacity:1;text-decoration:underline;text-decoration-color:var(--b
   .hero{height:100svh;min-height:100svh}
   .contact{height:auto;min-height:100svh}
 }
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .hero-name.typing-caret{animation:none}
+}
 </style>
 </head>
 <body>
@@ -254,7 +261,7 @@ nav ul a:hover{opacity:1;text-decoration:underline;text-decoration-color:var(--b
 <header class="hero" id="top">
   <div class="wrap">
     <div>
-      <h1>Romelyn D. Hainto<em>Hospitality Management</em></h1>
+      <h1 aria-label="Romelyn D. Hainto, Hospitality Management"><span class="hero-name" aria-hidden="true">Romelyn D. Hainto</span><em aria-hidden="true">Hospitality Management</em></h1>
       <p>Welcome. I'm a hospitality student ready to bring warm service, steady focus and a love of learning to the hotel, food and beverage, and travel industry.</p>
       <div class="btns">
         <a class="btn main" href="#contact">Get in touch</a>
@@ -387,6 +394,32 @@ nav ul a:hover{opacity:1;text-decoration:underline;text-decoration-color:var(--b
   const updateNav = () => nav.classList.toggle('scrolled', window.scrollY > 16);
   window.addEventListener('scroll', updateNav, {passive:true});
   updateNav();
+
+  const heroName = document.querySelector('.hero-name');
+  const fullName = heroName ? heroName.textContent : '';
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (heroName && fullName && !reducedMotion) {
+    const typingPause = 5000;
+    let characterIndex = 0;
+    const typeName = () => {
+      heroName.textContent = fullName.slice(0, characterIndex);
+      characterIndex += 1;
+      if (characterIndex <= fullName.length) {
+        window.setTimeout(typeName, 105);
+      } else {
+        heroName.classList.remove('typing-caret');
+        window.setTimeout(() => {
+          characterIndex = 0;
+          heroName.textContent = '';
+          heroName.classList.add('typing-caret');
+          typeName();
+        }, typingPause);
+      }
+    };
+    heroName.textContent = '';
+    heroName.classList.add('typing-caret');
+    typeName();
+  }
 
   const timeline = document.querySelector('.tl');
   const setTimelineSmokeStops = () => {
